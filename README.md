@@ -1,16 +1,29 @@
-# app_ventos
+# App Ventos
 
-A new Flutter project.
+Este app tera como objetivo principal a determinação dos fatores topográficos, de rusgosidade do terreno e estatístico segundo a NBR 6123.
 
-## Getting Started
+## Introdução
 
-This project is a starting point for a Flutter application.
+O usuário poderá realizar o cadastro dele, para que tenhamos o controle de que tipo de usuário estará utilizando o nosso app e assim realizar o login.
+O app terá como objetivo principal calcular a velocidade característica do vento de acordo com a localização do usuário e mostrar para ele, mas estará realizando esse calculo com alguns fatores que o usuário irá ter que informar, como:
+- Rugosidade;
+- Fatores Topográficos e outros.
 
-A few resources to get you started if this is your first Flutter project:
+Para o desenvolvimento da aplicação iremos utilizar as seguintes ferramentas:
+- Visual Studio Code;
+- Flutter;
+- Flask;
+- GIT;
+- PostGIS.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Orientadores e Discente
+
+Orientadores:
+
+- Marco Donisete de Campos;
+- Andre da Silva Abade.
+
+Discentes: 
+
+- Marcivon Ribeiro de Moura filho.
