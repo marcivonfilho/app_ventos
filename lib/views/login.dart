@@ -75,8 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                     children: [
-                      const TextSpan(
-                          text: 'Ainda não tem uma conta? familia clubs '),
+                      const TextSpan(text: 'Ainda não tem uma conta? '),
                       TextSpan(
                         text: 'Crie uma agora',
                         style: const TextStyle(
