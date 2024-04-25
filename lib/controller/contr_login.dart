@@ -15,13 +15,12 @@ Future<void> login(BuildContext context, String email, String senha) async {
     );
 
     if (response.statusCode == 200) {
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,
           content: Center(
             child: Text(
-              'Usuário Cadastrado com Sucesso.',
+              'Login Efetuado com Sucesso!',
               style: TextStyle(
                 fontSize: 17,
                 color: Colors.white,
@@ -31,13 +30,12 @@ Future<void> login(BuildContext context, String email, String senha) async {
         ),
       );
     } else if (response.statusCode == 401) {
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.red,
           content: Center(
             child: Text(
-              'Esse Usuário não está disponível',
+              'Credenciais incorretas!',
               style: TextStyle(
                 fontSize: 17,
                 color: Colors.white,
