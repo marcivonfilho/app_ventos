@@ -4,7 +4,8 @@ class Usuario {
   String sobrenome;
   String email;
   String senha;
-  String tipoUsuario; // Pode ser 'admin', 'cliente', 'funcionario', etc.
+  String
+      tipoUsuario; // Pode ser  'Estudante','Professor','Engenheiro','Outro' etc.
 
   // Construtor
   Usuario({

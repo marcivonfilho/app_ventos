@@ -4,6 +4,7 @@ import 'package:app_ventos/views/cadastro_user.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
+import 'package:app_ventos/controller/contr_login.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +49,18 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 buildTextFormField('E-mail', emailController, Icons.email),
                 const SizedBox(height: 16),
-                buildTextFormField('Senha', passwordController, Icons.lock,
+                buildTextFormField('Senha', senhaController, Icons.lock,
                     obscureText: true),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // A validação passou, processar os dados aqui
+
+                      String email = emailController.text;
+                      String senha = senhaController.text;
+
+                      login(context, email, senha);
                     }
                   },
                   style: ElevatedButton.styleFrom(
