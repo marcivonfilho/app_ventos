@@ -1,5 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, unnecessary_import
 
+import 'package:app_ventos/controller/contr_caduser.dart';
+import 'package:app_ventos/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/widgets.dart';
@@ -75,6 +77,15 @@ class _CadastroUserState extends State<CadastroUser> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // A validação passou, processar os dados aqui
+
+                    Usuario novoUser = Usuario(
+                        nome: nomeController.text,
+                        sobrenome: sobrenomeController.text,
+                        email: emailController.text,
+                        senha: senhaController.text,
+                        tipoUsuario: tipoUsuarioSelecionado);
+
+                    cadUser(context, novoUser);
                   }
                 },
                 style: ElevatedButton.styleFrom(

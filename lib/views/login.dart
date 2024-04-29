@@ -95,6 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CadastroUser()));
+
+                            emailController.clear();
+                            senhaController.clear();
                           },
                       ),
                     ],
