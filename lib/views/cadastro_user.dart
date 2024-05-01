@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, unnecessary_import
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, unnecessary_import, use_super_parameters
 
 import 'package:app_ventos/controller/contr_caduser.dart';
 import 'package:app_ventos/models/user.dart';
@@ -7,7 +7,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/widgets.dart';
 
 class CadastroUser extends StatefulWidget {
-  const CadastroUser({super.key});
+  const CadastroUser({Key? key}) : super(key: key);
 
   @override
   _CadastroUserState createState() => _CadastroUserState();
@@ -15,6 +15,7 @@ class CadastroUser extends StatefulWidget {
 
 class _CadastroUserState extends State<CadastroUser> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController sobrenomeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -32,6 +33,7 @@ class _CadastroUserState extends State<CadastroUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: _scaffoldKey,
         title: const Text(
           'Cadastro',
           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),

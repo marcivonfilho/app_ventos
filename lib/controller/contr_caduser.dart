@@ -3,7 +3,8 @@
 import 'package:app_ventos/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import "package:app_ventos/keys/key.dart";
+import 'package:app_ventos/keys/key.dart';
+import 'package:bcrypt/bcrypt.dart';
 
 Future<void> cadUser(BuildContext context, Usuario usuario) async {
   try {
@@ -13,7 +14,7 @@ Future<void> cadUser(BuildContext context, Usuario usuario) async {
         'nome': usuario.nome,
         'sobrenome': usuario.sobrenome,
         'email': usuario.email,
-        'senha': usuario.senha,
+        'senha': criptoSenha(usuario.senha),
         'tipoUser': usuario.tipoUsuario,
       },
     );
@@ -68,4 +69,12 @@ Future<void> cadUser(BuildContext context, Usuario usuario) async {
       ),
     );
   }
+}
+
+// Função para criptografar a senha durante o cadastro
+String criptoSenha(String senha) {
+  return BCrypt.hashpw(
+    senha,
+    BCrypt.gensalt(),
+  );
 }
