@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:app_ventos/themes/my_theme.dart';
 import 'package:app_ventos/views/cadastro_user.dart';
+import 'package:app_ventos/views/history_norma.dart';
 import 'package:app_ventos/views/login.dart';
 import 'package:flutter/material.dart';
 
@@ -15,12 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ventos',
+      theme: myTheme,
       routes: {
-        '/': (context) => LoginPage(), // Rota Tela principal
         '/login': (context) => LoginPage(), // Rota nomeada para a tela de login
         '/cadastro': (context) =>
             CadastroUser(), // Rota nomeada para a tela de cadastro
       },
+      home: HistoricoNorma(),
     );
   }
 }

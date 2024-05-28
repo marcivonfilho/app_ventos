@@ -36,10 +36,10 @@ class _CadastroUserState extends State<CadastroUser> {
         key: _scaffoldKey,
         title: const Text(
           'Cadastro',
-          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor:
-            const Color.fromARGB(255, 44, 44, 44), // Cor de fundo da tela,
+            Theme.of(context).primaryColor, // Cor de fundo da tela,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -50,8 +50,7 @@ class _CadastroUserState extends State<CadastroUser> {
           },
         ),
       ),
-      backgroundColor:
-          const Color.fromARGB(255, 44, 44, 44), // Cor de fundo da tela
+      backgroundColor: Theme.of(context).primaryColor, // Cor de fundo da tela
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(32.0),
         child: Form(
@@ -155,14 +154,13 @@ class _CadastroUserState extends State<CadastroUser> {
   Widget buildDropdownButton() {
     return DropdownButtonFormField(
       value: tipoUsuarioSelecionado,
+      icon: const Icon(Icons.people_sharp, color: Colors.white),
       // ignore: prefer_const_constructors
-      dropdownColor: const Color.fromARGB(255, 44, 44, 44),
+      dropdownColor: Theme.of(context).primaryColor,
       items: tiposUsuario.map((String tipo) {
         return DropdownMenuItem(
           value: tipo,
-          child: Text(tipo,
-              style:
-                  const TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+          child: Text(tipo, style: const TextStyle(color: Colors.white)),
         );
       }).toList(),
       onChanged: (newValue) {
@@ -171,14 +169,13 @@ class _CadastroUserState extends State<CadastroUser> {
         });
       },
       decoration: InputDecoration(
-        labelText: 'Tipo de usuário',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide:
-              const BorderSide(color: Color.fromARGB(255, 255, 255, 255)),
-        ),
-        labelStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-      ),
+          labelText: 'Tipo de usuário',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          labelStyle: const TextStyle(color: Colors.white),
+          iconColor: Theme.of(context).colorScheme.secondary),
     );
   }
 }
