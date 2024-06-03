@@ -29,6 +29,8 @@ Future<void> login(BuildContext context, String email, String senha) async {
           ),
         ),
       );
+
+      Navigator.pushReplacementNamed(context, '/historia-norma');
     } else if (response.statusCode == 401) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

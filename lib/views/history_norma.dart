@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart'; // Importar para abrir links externos
+import 'Drawer.dart';
 
 class HistoricoNorma extends StatelessWidget {
   const HistoricoNorma({Key? key}) : super(key: key);
@@ -29,8 +30,10 @@ class HistoricoNorma extends StatelessWidget {
           'Histórico da Norma NBR 6123',
           style: TextStyle(color: Colors.white),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      drawer: CustomDrawer(),
       backgroundColor: Theme.of(context).primaryColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
