@@ -1,8 +1,18 @@
-// ignore_for_file: file_names, prefer_const_constructors, use_key_in_widget_constructors
+// ignore_for_file: file_names, prefer_const_constructors, use_key_in_widget_constructors, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
+  Future<void> _logout(BuildContext context) async {
+    // Limpar dados de autenticação
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    // Redirecionar para a tela de login
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -42,6 +52,11 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushReplacementNamed(
                   context, '/mapa-isopletas-proposta');
             },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Sair'),
+            onTap: () => _logout(context),
           ),
         ],
       ),
