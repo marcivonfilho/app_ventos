@@ -24,8 +24,10 @@ class _ImageScreenState extends State<mapNBR> {
   Future<http.Response> fetchImage() async {
     try {
       print('Fetching image...');
-      final response = await http
-          .get(Uri.parse('${key_server}/img_isopleta?map_type=isopleta_nbr'));
+      final response = await http.get(
+        Uri.parse('${key_server}/img_isopleta?map_type=isopleta_nbr'),
+        headers: {'Accept': 'application/json'},
+      );
       if (response.statusCode == 200) {
         print('Image fetched successfully');
         return response;
