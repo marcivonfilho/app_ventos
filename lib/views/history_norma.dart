@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages, use_super_parameters, deprecated_member_use, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // Importar para abrir links externos
+import 'package:url_launcher/url_launcher.dart';
 import 'Drawer.dart';
 
 class HistoricoNorma extends StatelessWidget {

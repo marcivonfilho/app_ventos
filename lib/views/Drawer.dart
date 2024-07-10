@@ -54,6 +54,13 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.map_rounded),
+            title: Text('Calcular Velocidade VK Norma'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/local-map-screen');
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Sair'),
             onTap: () => _logout(context),
