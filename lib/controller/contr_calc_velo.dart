@@ -5,7 +5,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:app_ventos/keys/key.dart';
 
-Future<double?> calcVelo(
+class VelocityResult {
+  final double velocity;
+  final double velocityVD;
+
+  VelocityResult({required this.velocity, required this.velocityVD});
+
+  factory VelocityResult.fromJson(Map<String, dynamic> json) {
+    return VelocityResult(
+      velocity: json['velocity'],
+      velocityVD: json['velocitys'],
+    );
+  }
+}
+
+Future<VelocityResult?> calcVelo(
     BuildContext context,
     double latitude,
     double longitude,
@@ -15,7 +29,8 @@ Future<double?> calcVelo(
     double dt,
     String categorias2,
     String rajadas2,
-    String fators3) async {
+    String fators3,
+    String mapType) async {
   try {
     final response =
         await http.post(Uri.parse('$key_server/calc_velocidade'), body: {
@@ -28,12 +43,12 @@ Future<double?> calcVelo(
       'categoriaS2': categorias2,
       'rajadaS2': rajadas2,
       'fatorS3': fators3,
-      'map_type': 'isopleta_nbr_calc',
+      'map_type': mapType,
     });
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      return data['velocity'];
+      return VelocityResult.fromJson(data);
     } else if (response.statusCode == 401) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

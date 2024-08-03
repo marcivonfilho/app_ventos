@@ -20,6 +20,7 @@ class LocalMapScreen extends StatefulWidget {
 class _LocationMapScreenState extends State<LocalMapScreen> {
   Position? _currentPosition;
   final String _mapUrl = '';
+  String? _mapType;
   double? _nearestVelocity;
   String _error = '';
   final bool _isLoading = false;
@@ -30,6 +31,7 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
   bool _showAdditionalFields = false;
 
   double? _calculatedVelocidade;
+  double? _calculatedVelocidadeVD;
 
   String _selectedFatorS1 = 'Terreno plano ou fracamente acidentado';
   final List<String> fatorS1List = [
@@ -57,6 +59,10 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
   void initState() {
     super.initState();
     _checkPermissionsAndGetLocation();
+    Future.microtask(() {
+      final args = ModalRoute.of(context)?.settings.arguments as Map?;
+      _mapType = args?['mapType'];
+    });
   }
 
   Future<void> _checkPermissionsAndGetLocation() async {
@@ -107,47 +113,6 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
       }
     }
   }
-
-  /*
-  _sendLocationToAPI(double latitude, double longitude) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    var url = '$key_server/map_location';
-    try {
-      var response = await http.post(
-        Uri.parse(url),
-        body: {
-          'latitude': latitude.toString(),
-          'longitude': longitude.toString(),
-          'map_type': 'isopleta_nbr'
-        },
-        headers: {'Accept': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        setState(() {
-          _mapUrl = data['image_url'];
-          _nearestVelocity = data['nearest_velocity'];
-        });
-      } else {
-        setState(() {
-          _error = 'Erro na resposta da API: ${response.body}';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _error = 'Erro ao conectar-se à API: $e';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +170,7 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
                             double.tryParse(anguloTetaController.text) ?? 0;
                         final dt = double.tryParse(dtController.text) ?? 0;
 
-                        final velocidadeVK = await calcVelo(
+                        VelocityResult? result = await calcVelo(
                           context,
                           _currentPosition?.latitude ?? 0,
                           _currentPosition?.longitude ?? 0,
@@ -216,10 +181,12 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
                           _selectedcategoryS2,
                           _selectedrajS2,
                           _selectedS3,
+                          _mapType.toString(),
                         );
                         if (mounted) {
                           setState(() {
-                            _calculatedVelocidade = velocidadeVK;
+                            _calculatedVelocidade = result?.velocity;
+                            _calculatedVelocidadeVD = result?.velocityVD;
                           });
                         }
                       },
@@ -235,13 +202,24 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
                           style: TextStyle(color: Colors.black)),
                     ),
                     const SizedBox(height: 32),
-                    if (_isLoading)
-                      const Center(child: CircularProgressIndicator())
-                    else if (_calculatedVelocidade != null)
+                    if (_calculatedVelocidade != null)
                       Text(
-                        'Velocidade Característica Calculada: ${_calculatedVelocidade?.toStringAsFixed(2)} m/s',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                        'Velocidade Característica: ${_calculatedVelocidade?.toStringAsFixed(2)} m/s',
+                        style: const TextStyle(
+                          color: Colors.yellow,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    if (_calculatedVelocidadeVD != null)
+                      Text(
+                        'Velocidade para Vedações: ${_calculatedVelocidadeVD?.toStringAsFixed(2)} m/s',
+                        style: const TextStyle(
+                          color: Colors.yellow,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     if (_error.isNotEmpty)
                       Text(
@@ -249,10 +227,6 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
                         style: const TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     const SizedBox(height: 32),
-                    //if (_isLoading)
-                    //const Center(child: CircularProgressIndicator())
-                    //else if (_mapUrl.isNotEmpty)
-                    //Image.network(_mapUrl),
                   ],
                 ),
               ),

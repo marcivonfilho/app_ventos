@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ventos',
       theme: myTheme,
-      initialRoute: '/login',
+      initialRoute: '/historia-norma',
       routes: {
         '/login': (context) => LoginPage(), // Rota nomeada para a tela de login
         '/cadastro': (context) =>
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/historia-norma': (context) => HistoricoNorma(),
         '/mapa-isopletas-proposta': (context) => mapPROP(),
         '/mapa-isopletas-nbr': (context) => mapNBR(),
-        '/local-map-screen': (context) => LocalMapScreen(),
+        '/calc-velocidade-norma': (context) => LocalMapScreen(),
       },
     );
   }

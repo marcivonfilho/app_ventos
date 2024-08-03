@@ -57,7 +57,22 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.map_rounded),
             title: Text('Calcular Velocidade VK Norma'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/local-map-screen');
+              Navigator.pushReplacementNamed(
+                context,
+                '/calc-velocidade-norma',
+                arguments: {'mapType': 'isopleta_nbr_calc'},
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.map_rounded),
+            title: Text('Calcular Velocidade VK Proposta'),
+            onTap: () {
+              Navigator.pushReplacementNamed(
+                context,
+                '/calc-velocidade-norma',
+                arguments: {'mapType': 'isopleta_prop_calc'},
+              );
             },
           ),
           ListTile(
