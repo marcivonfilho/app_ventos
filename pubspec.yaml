@@ -48,6 +48,7 @@ dev_dependencies:
   geolocator: ^8.0.0
   webview_flutter: ^3.0.0
   flutter_inappwebview: ^6.0.0
+  google_maps_flutter: ^2.7.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

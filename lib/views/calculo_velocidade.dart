@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, unnecessary_import, unused_field, deprecated_member_use, use_build_context_synchronously, unused_import
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, unnecessary_import, unused_field, deprecated_member_use, use_build_context_synchronously, unused_import, non_constant_identifier_names
 
 import 'package:app_ventos/controller/contr_calc_velo.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:app_ventos/keys/key.dart';
 import 'package:app_ventos/views/Drawer.dart';
 import 'package:flutter/services.dart';
 import 'package:app_ventos/views/DialogHelp.dart';
+import 'package:app_ventos/views/map_google.dart';
 
 class LocalMapScreen extends StatefulWidget {
   const LocalMapScreen({super.key});
@@ -19,14 +20,22 @@ class LocalMapScreen extends StatefulWidget {
 
 class _LocationMapScreenState extends State<LocalMapScreen> {
   Position? _currentPosition;
+  double? latitudee;
+  double? longitudee;
+  double? altura;
   final String _mapUrl = '';
+  String _name_tela = '';
   String? _mapType;
   double? _nearestVelocity;
   String _error = '';
   final bool _isLoading = false;
+
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController alturaControler = TextEditingController();
   final TextEditingController anguloTetaController = TextEditingController();
   final TextEditingController dtController = TextEditingController();
+  final TextEditingController longitudeController = TextEditingController();
+  final TextEditingController latitudeController = TextEditingController();
 
   bool _showAdditionalFields = false;
 
@@ -62,6 +71,12 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
     Future.microtask(() {
       final args = ModalRoute.of(context)?.settings.arguments as Map?;
       _mapType = args?['mapType'];
+      if (_mapType == 'isopleta_nbr_calc') {
+        _name_tela = 'Calculo Velocidade Vk Norma';
+      } else if (_mapType == 'isopleta_prop_calc') {
+        _name_tela = 'Calcular Velocidade VK Proposta';
+      }
+      setState(() {});
     });
   }
 
@@ -101,6 +116,8 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
       if (mounted) {
         setState(() {
           _currentPosition = position;
+          longitudeController.text = position.longitude.toString();
+          latitudeController.text = position.latitude.toString();
         });
       }
 
@@ -114,13 +131,30 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
     }
   }
 
+  void _openMap() async {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: MapSelectionScreen(
+          onLocationSelected: (double latitude, double longitude) {
+            setState(() {
+              latitudeController.text = latitude.toString();
+              longitudeController.text = longitude.toString();
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Calculo Velocidade Vk Norma',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          _name_tela,
+          style: const TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
@@ -140,94 +174,124 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    buildTextField(alturaControler, 'Altura (z)', Icons.height,
-                        const TextInputType.numberWithOptions(decimal: true)),
-                    const SizedBox(height: 16),
-                    buildDropdownButtonS1(),
-                    if (_showAdditionalFields) ...[
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      buildTextField(latitudeController, 'Latitude',
+                          Icons.location_on, TextInputType.number,
+                          readOnly: true),
+                      const SizedBox(height: 16),
+                      buildTextField(longitudeController, 'Longitude',
+                          Icons.location_on, TextInputType.number,
+                          readOnly: true),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _openMap,
+                        child: const Text('Abrir Mapa',
+                            style: TextStyle(color: Colors.black)),
+                      ),
                       const SizedBox(height: 16),
                       buildTextField(
-                          anguloTetaController,
-                          'Ângulo Teta (θ)',
+                          alturaControler,
+                          'Altura (z)',
                           Icons.height,
                           const TextInputType.numberWithOptions(decimal: true)),
                       const SizedBox(height: 16),
-                      buildTextField(dtController, 'Valor dt', Icons.height,
-                          const TextInputType.numberWithOptions(decimal: true)),
-                    ],
-                    const SizedBox(height: 16),
-                    buildDropdownButtonS2cat(),
-                    const SizedBox(height: 16),
-                    buildDropdownButtonS2raj(),
-                    const SizedBox(height: 16),
-                    buildDropdownButtonS3(),
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final anguloTeta =
-                            double.tryParse(anguloTetaController.text) ?? 0;
-                        final dt = double.tryParse(dtController.text) ?? 0;
-
-                        VelocityResult? result = await calcVelo(
-                          context,
-                          _currentPosition?.latitude ?? 0,
-                          _currentPosition?.longitude ?? 0,
-                          double.parse(alturaControler.text),
-                          _selectedFatorS1,
-                          anguloTeta,
-                          dt,
-                          _selectedcategoryS2,
-                          _selectedrajS2,
-                          _selectedS3,
-                          _mapType.toString(),
-                        );
-                        if (mounted) {
-                          setState(() {
-                            _calculatedVelocidade = result?.velocity;
-                            _calculatedVelocidadeVD = result?.velocityVD;
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 35),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                      buildDropdownButtonS1(),
+                      if (_showAdditionalFields) ...[
+                        const SizedBox(height: 16),
+                        buildTextField(
+                            anguloTetaController,
+                            'Ângulo Teta (θ)',
+                            Icons.height,
+                            const TextInputType.numberWithOptions(
+                                decimal: true)),
+                        const SizedBox(height: 16),
+                        buildTextField(
+                            dtController,
+                            'Valor dt',
+                            Icons.height,
+                            const TextInputType.numberWithOptions(
+                                decimal: true)),
+                      ],
+                      const SizedBox(height: 16),
+                      buildDropdownButtonS2cat(),
+                      const SizedBox(height: 16),
+                      buildDropdownButtonS2raj(),
+                      const SizedBox(height: 16),
+                      buildDropdownButtonS3(),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            final anguloTeta =
+                                double.tryParse(anguloTetaController.text) ?? 0;
+                            final dt = double.tryParse(dtController.text) ?? 0;
+                            latitudee = double.parse(latitudeController.text);
+                            longitudee = double.parse(longitudeController.text);
+                            altura = double.parse(alturaControler.text);
+                            VelocityResult? result = await calcVelo(
+                              context,
+                              latitudee ?? 0,
+                              longitudee ?? 0,
+                              altura ?? 0,
+                              _selectedFatorS1,
+                              anguloTeta,
+                              dt,
+                              _selectedcategoryS2,
+                              _selectedrajS2,
+                              _selectedS3,
+                              _mapType.toString(),
+                            );
+                            if (mounted) {
+                              setState(() {
+                                _calculatedVelocidade = result?.velocity;
+                                _calculatedVelocidadeVD = result?.velocityVD;
+                              });
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 35),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 255, 255)),
+                        child: const Text('Calcular',
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                      const SizedBox(height: 32),
+                      if (_calculatedVelocidade != null)
+                        Text(
+                          'Velocidade Característica: ${_calculatedVelocidade?.toStringAsFixed(2)} m/s',
+                          style: const TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255)),
-                      child: const Text('Calcular',
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    const SizedBox(height: 32),
-                    if (_calculatedVelocidade != null)
-                      Text(
-                        'Velocidade Característica: ${_calculatedVelocidade?.toStringAsFixed(2)} m/s',
-                        style: const TextStyle(
-                          color: Colors.yellow,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
                         ),
-                      ),
-                    const SizedBox(height: 16),
-                    if (_calculatedVelocidadeVD != null)
-                      Text(
-                        'Velocidade para Vedações: ${_calculatedVelocidadeVD?.toStringAsFixed(2)} m/s',
-                        style: const TextStyle(
-                          color: Colors.yellow,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(height: 16),
+                      if (_calculatedVelocidadeVD != null)
+                        Text(
+                          'Velocidade para Vedações: ${_calculatedVelocidadeVD?.toStringAsFixed(2)} m/s',
+                          style: const TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    if (_error.isNotEmpty)
-                      Text(
-                        _error,
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
-                      ),
-                    const SizedBox(height: 32),
-                  ],
+                      if (_error.isNotEmpty)
+                        Text(
+                          _error,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -236,7 +300,9 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
 
   Widget buildTextField(TextEditingController controller, String labelText,
       IconData icon, TextInputType keyboardType,
-      {bool obscureText = false, String? Function(String?)? validator}) {
+      {bool obscureText = false,
+      String? Function(String?)? validator,
+      bool readOnly = false}) {
     return TextFormField(
       controller: controller,
       inputFormatters: [
@@ -269,6 +335,13 @@ class _LocationMapScreenState extends State<LocalMapScreen> {
       style: const TextStyle(color: Colors.white), // Cor do texto
       keyboardType: keyboardType,
       obscureText: obscureText,
+      readOnly: readOnly,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Por favor, insira a $labelText';
+        }
+        return null;
+      },
     );
   }
 
